@@ -236,7 +236,18 @@ ServerSignature Off
     ProxyPass /api/ http://localhost:3001/api/
     ProxyPassReverse /api/ http://localhost:3001/api/
     
-    # Handle short links (single path segments)
+    RewriteCond %{REQUEST_URI} !^/api/
+    RewriteCond %{REQUEST_URI} !^/assets/
+    RewriteCond %{REQUEST_URI} !^/favicon.ico
+    RewriteCond %{REQUEST_URI} !^/robots.txt
+    RewriteRule ^/([a-zA-Z0-9]{8})$ http://localhost:3001/\$1 [P,L]
+    
+    # Serve static files
+    <Directory "$APP_DIR/public">
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
     RewriteEngine On
     RewriteRule ^/([a-zA-Z0-9]+)$ http://localhost:3001/\$1 [P,L]
     
@@ -267,7 +278,18 @@ ServerSignature Off
     RewriteEngine On
     RewriteRule ^/([a-zA-Z0-9]+)$ http://localhost:3001/\$1 [P,L]
     
-    # Security headers
+    RewriteCond %{REQUEST_URI} !^/api/
+    RewriteCond %{REQUEST_URI} !^/assets/
+    RewriteCond %{REQUEST_URI} !^/favicon.ico
+    RewriteCond %{REQUEST_URI} !^/robots.txt
+    RewriteRule ^/([a-zA-Z0-9]{8})$ http://localhost:3001/\$1 [P,L]
+    
+    # Serve static files
+    <Directory "$APP_DIR/public">
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
     Header always set X-Frame-Options DENY
     Header always set X-Content-Type-Options nosniff
     Header always set Referrer-Policy strict-origin-when-cross-origin
