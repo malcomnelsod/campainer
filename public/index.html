@@ -52,7 +52,8 @@
     <div class="status">
         <h3>✅ API Server Status: Online</h3>
         <p>Your ClickTracker Pro API server is running successfully!</p>
-        <p><strong>Note:</strong> This is the development fallback page. The React frontend should be served by Vite on port 5173.</p>
+        <p><strong>Server:</strong> ec2-54-226-26-59.compute-1.amazonaws.com</p>
+        <p><strong>Status:</strong> Production Ready</p>
     </div>
 
     <div class="api-info">
@@ -66,5 +67,30 @@
             <li><code>GET /:shortCode</code> - Redirect short links</li>
         </ul>
     </div>
+
+    <div class="test-section">
+        <h3>🧪 API Testing</h3>
+        <p>Test your API endpoints:</p>
+        <button class="btn" onclick="testAPI('/api/stats')">Test Stats</button>
+        <button class="btn" onclick="testAPI('/api/links')">Test Links</button>
+        <button class="btn" onclick="testAPI('/api/domains')">Test Domains</button>
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function testAPI(endpoint) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                resultDiv.textContent = `${endpoint}:\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.textContent = `Error testing ${endpoint}:\n${error.message}`;
+            }
+        }
+    </script>
 </body>
 </html>
