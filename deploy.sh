@@ -986,7 +986,7 @@ After=network.target
 Type=simple
 User=$APP_USER
 WorkingDirectory=$APP_DIR
-ExecStart=/usr/bin/node server/app.js
+ExecStart=/usr/bin/node $APP_DIR/server/app.js
 Restart=on-failure
 RestartSec=10
 Environment=NODE_ENV=production
