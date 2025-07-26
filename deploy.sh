@@ -222,6 +222,10 @@ a2enmod headers
 
 # Create Apache virtual host configuration
 cat > /etc/apache2/sites-available/${APP_NAME}.conf << EOF
+# Global Apache configuration
+ServerTokens Prod
+ServerSignature Off
+
 <VirtualHost *:80>
     ServerName $DOMAIN
     ServerAlias www.$DOMAIN
@@ -244,10 +248,6 @@ cat > /etc/apache2/sites-available/${APP_NAME}.conf << EOF
     # Logging
     ErrorLog \${APACHE_LOG_DIR}/${APP_NAME}_error.log
     CustomLog \${APACHE_LOG_DIR}/${APP_NAME}_access.log combined
-    
-    # Hide server information
-    ServerTokens Prod
-    ServerSignature Off
 </VirtualHost>
 
 # HTTPS Virtual Host (will be configured by Certbot)
