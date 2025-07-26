@@ -108,12 +108,17 @@ npm install --production
 # Create the main server application
 print_status "Creating server application..."
 cat > server/app.js << 'EOF'
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
-const { parse } = require('csv-parse');
-const { stringify } = require('csv-stringify');
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import crypto from 'crypto';
+import { parse } from 'csv-parse';
+import { stringify } from 'csv-stringify';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
