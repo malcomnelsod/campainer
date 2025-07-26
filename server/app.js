@@ -156,6 +156,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/dashboard.html'));
 });
 
+// Also serve dashboard at /dashboard
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+});
+
 // API Routes
 
 // Get dashboard stats
