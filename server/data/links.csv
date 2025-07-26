@@ -1,2 +1,1 @@
-id,original_url,short_code,campaign,clicks,cloaked,domain,created_at
-8e82fe8a-809e-4197-ac5d-3be18cef73cc,2093c073-1dea-4871-b4a0-6adee9b29dc8,https://app.netlify.com/projects/abdo-app-test/overview,46678932,,0,false,,2025-07-26T13:44:06.086Z,,true
+id,campaign_id,original_url,short_code,encrypted_url,clicks,cloaked,domain,created_at,expires_at,active

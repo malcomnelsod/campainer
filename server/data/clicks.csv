@@ -1,1 +1,1 @@
-id,link_id,campaign,ip_address,user_agent,country,timestamp,referrer
+id,link_id,campaign_id,ip_address,user_agent,country,city,referrer,timestamp,device_type,browser
