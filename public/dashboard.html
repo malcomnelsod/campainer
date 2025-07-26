@@ -277,6 +277,36 @@
             border: 1px solid #f5c6cb;
         }
 
+        .tutorial-highlight {
+            position: relative;
+            border: 3px solid #ff9800;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: rgba(255, 152, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+        .tutorial-arrow {
+            background: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -293,6 +323,12 @@
         <div class="header">
             <h1>🔗 Email Campaign URL Tracker</h1>
             <p>Professional URL tracking and redirect system for email marketers</p>
+            <div id="tutorial-banner" style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 8px; padding: 15px; margin-top: 20px; display: none;">
+                <h3 style="color: #1976d2; margin: 0 0 10px 0;">🚀 Quick Start Tutorial</h3>
+                <p style="margin: 0; color: #1565c0;">Follow these steps to create your first email campaign and tracking link!</p>
+                <button onclick="startTutorial()" style="margin-top: 10px; padding: 8px 16px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">Start Tutorial</button>
+                <button onclick="hideTutorial()" style="margin-top: 10px; margin-left: 10px; padding: 8px 16px; background: #757575; color: white; border: none; border-radius: 4px; cursor: pointer;">Skip</button>
+            </div>
         </div>
 
         <div class="stats-grid" id="statsGrid">
@@ -309,14 +345,17 @@
 
                 <div id="campaigns-tab" class="tab-content active">
                     <h3>Create Campaign</h3>
+                    <div id="step1-highlight" class="tutorial-highlight" style="display: none;">
+                        <div class="tutorial-arrow">👈 Start here! Create your first campaign</div>
+                    </div>
                     <form id="campaignForm">
                         <div class="form-group">
                             <label>Campaign Name</label>
-                            <input type="text" id="campaignName" required placeholder="Black Friday 2024">
+                            <input type="text" id="campaignName" required placeholder="My First Email Campaign">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea id="campaignDescription" rows="3" placeholder="Campaign description..."></textarea>
+                            <textarea id="campaignDescription" rows="3" placeholder="This is my first email marketing campaign with URL tracking"></textarea>
                         </div>
                         <button type="submit" class="btn">Create Campaign</button>
                     </form>
@@ -324,6 +363,9 @@
 
                 <div id="links-tab" class="tab-content">
                     <h3>Create Tracking Link</h3>
+                    <div id="step2-highlight" class="tutorial-highlight" style="display: none;">
+                        <div class="tutorial-arrow">👈 Step 2: Create your tracking link</div>
+                    </div>
                     <form id="linkForm">
                         <div class="form-group">
                             <label>Campaign</label>
@@ -333,7 +375,7 @@
                         </div>
                         <div class="form-group">
                             <label>Original URL</label>
-                            <input type="url" id="originalUrl" required placeholder="https://example.com/product">
+                            <input type="url" id="originalUrl" required placeholder="https://yourwebsite.com/special-offer">
                         </div>
                         <div class="form-group">
                             <label>Custom Domain (Optional)</label>
@@ -344,7 +386,7 @@
                         <div class="form-group">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="cloaked">
-                                <label for="cloaked">Enable URL cloaking (hide destination)</label>
+                                <label for="cloaked">✨ Enable URL cloaking (hide destination from recipients)</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -421,6 +463,8 @@
         let links = [];
         let domains = [];
 
+        let tutorialStep = 0;
+        let tutorialActive = false;
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             loadStats();
@@ -432,6 +476,13 @@
             document.getElementById('campaignForm').addEventListener('submit', createCampaign);
             document.getElementById('linkForm').addEventListener('submit', createLink);
             document.getElementById('domainForm').addEventListener('submit', addDomain);
+            
+            // Show tutorial banner for new users
+            setTimeout(() => {
+                if (campaigns.length === 0) {
+                    document.getElementById('tutorial-banner').style.display = 'block';
+                }
+            }, 2000);
         });
 
         function switchTab(tabName) {
@@ -617,7 +668,32 @@
                     document.getElementById('linkForm').reset();
                     loadLinks();
                     loadStats();
-                    showAlert('Tracking link created successfully!', 'success');
+                    const linkData = await response.json();
+                    const shortUrl = `${window.location.origin}/${linkData.short_code}`;
+                    
+                    // Show success with copy button
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'success-message';
+                    successDiv.innerHTML = `
+                        <h4>🎉 Tracking Link Created Successfully!</h4>
+                        <p><strong>Your tracking URL:</strong></p>
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; margin: 10px 0;">
+                            ${shortUrl}
+                        </div>
+                        <button onclick="copyToClipboard('${shortUrl}')" class="btn" style="margin-right: 10px;">📋 Copy Link</button>
+                        <button onclick="window.open('${shortUrl}', '_blank')" class="btn btn-secondary">🔗 Test Link</button>
+                        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                            💡 <strong>Next:</strong> Use this link in your email campaigns to track clicks!
+                        </p>
+                    `;
+                    document.querySelector('.container').insertBefore(successDiv, document.querySelector('.stats-grid'));
+                    setTimeout(() => successDiv.remove(), 15000);
+                    
+                    // Tutorial progression
+                    if (tutorialActive && tutorialStep === 2) {
+                        tutorialStep = 3;
+                        setTimeout(() => showTutorialStep(), 2000);
+                    }
                 }
             } catch (error) {
                 showAlert('Failed to create link', 'error');
@@ -681,6 +757,46 @@
             document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.stats-grid'));
             
             setTimeout(() => {
+        function startTutorial() {
+            tutorialActive = true;
+            tutorialStep = 1;
+            document.getElementById('tutorial-banner').style.display = 'none';
+            showTutorialStep();
+        }
+
+        function hideTutorial() {
+            document.getElementById('tutorial-banner').style.display = 'none';
+            tutorialActive = false;
+        }
+
+        function showTutorialStep() {
+            // Hide all highlights
+            document.querySelectorAll('.tutorial-highlight').forEach(el => el.style.display = 'none');
+            
+            if (tutorialStep === 1) {
+                // Step 1: Create Campaign
+                switchTab('campaigns');
+                document.getElementById('step1-highlight').style.display = 'block';
+                showAlert('Step 1: Create your first email campaign by filling out the form below', 'success');
+            } else if (tutorialStep === 2) {
+                // Step 2: Create Link
+                switchTab('links');
+                document.getElementById('step2-highlight').style.display = 'block';
+                showAlert('Step 2: Now create a tracking link for your campaign', 'success');
+            } else if (tutorialStep === 3) {
+                // Step 3: Complete
+                showAlert('🎉 Tutorial Complete! Your tracking link is ready to use in emails', 'success');
+                tutorialActive = false;
+                document.querySelectorAll('.tutorial-highlight').forEach(el => el.style.display = 'none');
+            }
+        }
+
+                    
+                    // Tutorial progression
+                    if (tutorialActive && tutorialStep === 1) {
+                        tutorialStep = 2;
+                        setTimeout(() => showTutorialStep(), 1500);
+                    }
                 alertDiv.remove();
             }, 5000);
         }
