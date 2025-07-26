@@ -1035,7 +1035,10 @@ cat > /etc/apache2/sites-available/${APP_NAME}.conf << EOF
     RewriteRule ^/([a-f0-9]{8})$ http://localhost:3001/\$1 [P,L]
     
     # Serve dashboard for root
-    RewriteRule ^/$ /dashboard.html [L]
+    RewriteRule ^/?$ /dashboard.html [L]
+    
+    # Also handle /dashboard route
+    RewriteRule ^/dashboard/?$ /dashboard.html [L]
     
     # Directory configuration
     <Directory "$APP_DIR/public">
