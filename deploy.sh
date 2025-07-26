@@ -553,6 +553,3 @@ echo ""
 echo "📖 Full installation details saved to: $APP_DIR/INSTALLATION_SUMMARY.txt"
 echo ""
 print_success "Deployment completed! 🚀"
-EOF
-
-chmod +x deploy.sh
