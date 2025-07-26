@@ -11,7 +11,7 @@ echo "🚀 Starting ClickTracker Pro Deployment..."
 APP_NAME="clicktracker-pro"
 APP_USER="www-data"
 APP_DIR="/var/www/clicktracker-pro"
-DOMAIN="your-domain.com"
+DOMAIN="ec2-54-226-26-59.compute-1.amazonaws.com"
 NODE_VERSION="18"
 
 # Colors for output
